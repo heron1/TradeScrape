@@ -9,7 +9,7 @@ namespace APICmdPromptApp
 		public static IAppSettings settingsConnector;
 
 		public static (bool success, string platform, string apiKey, string secretKey, string passphrase)
-			GetDefaultCredentialsFromDatabase()
+			GetDefaultCredentialsFromSettings()
 		{
 			return settingsConnector.GetDefaultCredentials();
 		}
@@ -92,7 +92,7 @@ namespace APICmdPromptApp
 				success = ChangeDefaultPlatform(platform);
 			}
 
-			(success, platform, apiKey, secretKey, passphrase) = GetDefaultCredentialsFromDatabase();
+			(success, platform, apiKey, secretKey, passphrase) = GetDefaultCredentialsFromSettings();
 			while (!success)
 			{
 				print("Error retrieving the platform. Please ensure entered platform is supported");
@@ -100,7 +100,7 @@ namespace APICmdPromptApp
 				platform = Console.ReadLine();
 				SetCredentials(platform, apiKey, secretKey, passphrase);
 				settingsConnector.SetDefaultPlatform(platform);
-				(success, platform, apiKey, secretKey, passphrase) = GetDefaultCredentialsFromDatabase();
+				(success, platform, apiKey, secretKey, passphrase) = GetDefaultCredentialsFromSettings();
 			}
 
 			return (platform, apiKey, secretKey, passphrase);

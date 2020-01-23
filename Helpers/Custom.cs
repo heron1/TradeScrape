@@ -54,11 +54,8 @@ namespace Helpers
 		/// <param name="rethrowException"></param>
 		public static void LogException(Exception e)
 		{
-			//Retrieves the directory of the program executable
-			string filePath = GetFilenameApplicationPath("log.txt");
-
 			//Appends Exception information to the log file. If the log file doesn't exist, creates it
-			using (StreamWriter logFile = File.AppendText(filePath))
+			using (StreamWriter logFile = File.AppendText("errorlog.txt"))
 			{
 				string preString = DateTime.Now.ToString(CultureInfo.InvariantCulture);
 				logFile.WriteLine(preString);

@@ -18,6 +18,7 @@
       <ProjectReference Include="..\AppSettingsFactory\AppSettingsFactory.csproj" />
       <ProjectReference Include="..\AppSettings\AppSettings.csproj" />
       <ProjectReference Include="..\Scraper\Scraper.csproj" />
+      <ProjectReference Include="..\SettingsFileSystem\SettingsFileSystem.csproj" />
     </ItemGroup>
 
 </Project>

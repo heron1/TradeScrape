@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AppSettings\AppSettings.csproj" />
       <ProjectReference Include="..\Helpers\Helpers.csproj" />
     </ItemGroup>
 

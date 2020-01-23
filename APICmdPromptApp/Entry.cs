@@ -36,7 +36,8 @@ namespace APICmdPromptApp
 
 		private static void DatabaseLink()
 		{
-			settingsConnector = SupplierIAppSettings.GetDatabaseIAppSettings(); //refactor to allow choosing of storage mechanism
+			settingsConnector = SupplierIAppSettings.GetIAppSettingsStorage(); //refactor to allow choosing of storage mechanism
+			
 			SettingsCommunicator.settingsConnector = settingsConnector;
 			InitializeCredentials();
 		}
@@ -50,7 +51,7 @@ namespace APICmdPromptApp
 		private static void InitializeCredentials()
 		{
 			(var success, var platform, var apiKey, var secretKey, var passphrase) =
-				SettingsCommunicator.GetDefaultCredentialsFromDatabase();
+				SettingsCommunicator.GetDefaultCredentialsFromSettings();
 			if (!success) (platform, apiKey, secretKey, passphrase) = SettingsCommunicator.PromptSetUserDefaultCredentials();
 
 			_platform = platform;
