@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace Scraper
 {
+	//public access point API for Scraper namespace
 	public class WebScraper : IOrderFunctions
 	{
 		private string _platform;
@@ -11,7 +12,7 @@ namespace Scraper
 		private string _secretKey;
 		private string _passphrase;
 
-		private IOrderFunctions _innerType;
+		private readonly IOrderFunctions _innerType;
 
 		public WebScraper(string platform, string apiKey, string secretKey, string passphrase = null)
 		{

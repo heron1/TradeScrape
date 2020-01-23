@@ -1,5 +1,5 @@
 ﻿﻿using Scraper;
-
+ 
  namespace TradingAPI
 {
 	public static class SupplierIOrderFunctions

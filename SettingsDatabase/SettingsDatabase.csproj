@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AppSettings\AppSettings.csproj" />
+      <ProjectReference Include="..\Helpers\Helpers.csproj" />
+    </ItemGroup>
+
+</Project>
