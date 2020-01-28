@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using TradeScrape_Unit_Tests.LiveAPIIntegrations_Level1.Mocks;
 
 namespace Scraper
 {
-	//public access point API for Scraper namespace
-	public class WebScraper : IOrderFunctions
+	//public access point API for Scraper namespace, acts as a wrapper
+	public class ScraperWrapper : IOrderFunctions
 	{
 		private string _platform;
 		private string _apiKey;
@@ -14,17 +17,33 @@ namespace Scraper
 
 		private readonly IOrderFunctions _innerType;
 
-		public WebScraper(string platform, string apiKey, string secretKey, string passphrase = null)
+		public ScraperWrapper(string platform, string apiKey = null, string secretKey = null, string passphrase = null)
 		{
+			//Assert state
+			if (platform == null) throw new ArgumentNullException("platform");
+
 			//Constructor simply calls SetCredentials.
 			SetCredentials(platform, apiKey, secretKey, passphrase);
 			if (platform == "bitfinex")
 			{
+				//Assert state
+				if (apiKey == null) throw new ArgumentNullException("apiKey");
+				if (secretKey == null) throw new ArgumentNullException("secretKey");
+				
 				_innerType = new BitfinexAPI(apiKey, secretKey);
 			}
 			else if (platform == "kucoin")
 			{
+				//Assert state
+				if (apiKey == null) throw new ArgumentNullException("apiKey");
+				if (secretKey == null) throw new ArgumentNullException("secretKey");
+				if (passphrase == null) throw new ArgumentNullException("passphrase");
+				
 				_innerType = new KucoinAPI(apiKey, secretKey, passphrase);
+			}
+			else if (platform == "mock")
+			{
+				_innerType = new MockAPI();
 			}
 			else
 			{
@@ -97,7 +116,18 @@ namespace Scraper
 
 		public Task<string[]> SymbolStats(string[] symbolPair)
 		{
-			return _innerType.SymbolStats(symbolPair);
+			 var output = _innerType.SymbolStats(symbolPair).Result;
+			 output[1] = JsonConvert.DeserializeObject<Decimal>(output[1]).ToString();
+			 output[2] = JsonConvert.DeserializeObject<Decimal>(output[2]).ToString();
+			 output[3] = JsonConvert.DeserializeObject<Decimal>(output[3]).ToString();
+			 output[4] = JsonConvert.DeserializeObject<Decimal>(output[4]).ToString();
+			 output[5] = JsonConvert.DeserializeObject<Decimal>(output[5]).ToString();
+			 output[6] = JsonConvert.DeserializeObject<Decimal>(output[6]).ToString();
+			 output[7] = JsonConvert.DeserializeObject<Decimal>(output[7]).ToString();
+			 output[8] = JsonConvert.DeserializeObject<Decimal>(output[8]).ToString();
+
+			 var aFix = Task.Run<string[]>(() => output);
+			 return aFix;
 		}
 
 		public string[] GetSupportedPlatforms()

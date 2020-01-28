@@ -1,9 +1,9 @@
-﻿﻿using Scraper;
+﻿﻿using AdvancedAPI;
 
  namespace TradingAPI
 {
-	public interface ITrade : IOrderFunctions
+	public interface ITrade : IAdvanced
 	{
-		//interface with higher level methods that utilize 1st level ones as needed
+		//interface with higher level methods that utilize lower level ones as needed
 	}
 }

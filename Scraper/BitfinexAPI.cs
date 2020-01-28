@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,14 +13,14 @@ using static Helpers.Custom;
 
 namespace Scraper
 {
-	public class BitfinexAPI : IOrderFunctions
+	internal class BitfinexAPI : IOrderFunctions
 	{
 		private string _platform = "bitfinex";
 		private string _apiKey;
 		private string _secretKey;
 		
 		#if DEBUG
-		private bool _debug = true;
+		private bool _debug = false;
 		#else
 		private bool _debug = false;
 		#endif
@@ -699,9 +699,28 @@ namespace Scraper
 
 		public async Task<string[]> SymbolStats(string[] symbolPair)
 		{
-			HttpResponseMessage response = 
-				await getResponseForPublic($"https://api-pub.bitfinex.com/v2/tickers?symbols=t{symbolPair[0]}{symbolPair[1]}");
-			string[] output = destringifyString<string[][]>(await response.Content.ReadAsStringAsync())[0];
+			var timeout = Task.Delay(2000);
+			var response = getResponseForPublic($"https://api-pub.bitfinex.com/v2/tickers?symbols=" +
+			                                    $"t{symbolPair[0].ToUpper()}{symbolPair[1].ToUpper()}");
+			var completeTask = await Task.WhenAny(timeout, response);
+			if (completeTask == timeout)
+				throw new Exception("API timeout (BitFinexAPI)");
+			else if (completeTask != response)
+				throw new Exception("Unknown exception (BitFinexAPI)");
+
+			HttpResponseMessage res = response.Result;
+
+			var timeout2 = Task.Delay(2000);
+			var response2 = res.Content.ReadAsStringAsync();
+			var completeTask2 = await Task.WhenAny(timeout2, response2);
+			if (completeTask2 == timeout2)
+				throw new Exception("API timeout (BitFinexAPI)");
+			else if (completeTask2 != response2)
+			{
+				throw new Exception("Unknown exception (BitFinexAPI)");
+			}
+
+			string[] output = destringifyString<string[][]>(response2.Result)[0];
 			string[] symbolStats = new string[9];
 			//symbol, current bid, current bid size, ask, ask size, last price, volume, high, low
 			symbolStats[0] = output[0].Substring(1);
@@ -720,7 +739,7 @@ namespace Scraper
 
 		public string[] GetSupportedPlatforms()
 		{
-			throw new System.NotSupportedException("Use WebScraper entry point");
+			throw new System.NotSupportedException("Use ScraperWrapper entry point");
 		}
 
 		public Status SetCredentials(string platform, string apiKey, string secretKey, string passphrase)
@@ -730,7 +749,7 @@ namespace Scraper
 
 		public (string platform, string apiKey, string secretKey, string passphrase) GetCredentials()
 		{
-			throw new System.NotSupportedException("Use WebScraper entry point");
+			throw new System.NotSupportedException("Use ScraperWrapper entry point");
 		}
 
 		public async Task<bool> TestCredentials()

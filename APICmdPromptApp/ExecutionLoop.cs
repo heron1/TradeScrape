@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
+using AdvancedAPI;
 using AppSettings;
 using Helpers;
 using Scraper;
@@ -68,6 +70,12 @@ namespace APICmdPromptApp
 						ClearKeysOnExit(userInput);
 					else if (userInput == "help") //set to true or false
 						PrintInstructions();
+					
+					//arbitrage API
+					else if (userInput.Contains("arbitrage"))
+						ExecuteArbitrage(userInput);
+					else if (userInput.Contains("commonsymbols"))
+						ExecuteGetCommonSymbols(userInput);
 
 					else
 						Custom.print("Query not recognized");
@@ -75,18 +83,89 @@ namespace APICmdPromptApp
 
 				catch (Exception e) when (e.InnerException is FormatException || e is FormatException)
 				{
+					Custom.LogException(e);
 					Custom.print("Query is in invalid format");
 				}
 
 				catch (Exception e) when (e.InnerException is NullReferenceException || e is NullReferenceException)
 				{
+					Custom.LogException(e);
 					Custom.print("Exception encountered. Type 'setcreds' to reset your API credentials");
 				}
 
 				catch (Exception e)
 				{
+					Custom.LogException(e);
 					Custom.print("Need to handle this exception.." + e);
 				}
+		}
+
+		private static void ExecuteGetCommonSymbols(string userInput)
+		{
+			string[] inputSplit = userInput.Split(" ");
+			if (inputSplit[0] != "commonsymbols" || inputSplit.Length != 3)
+			{
+				Custom.print("Format must be in form of: commonsymbols platform1 platform2\n" +
+				             "Eg: commonsymbols bitfinex kucoin");
+				return;
+			}
+
+			(string platform1, string platform2) platforms = (inputSplit[1], inputSplit[2]);
+
+			List<(string, string)> commonSymbols = tradingAPI.FindMatchingPlatformSymbolPairs(platforms);
+			
+			Custom.PrintCollection(commonSymbols);
+		}
+
+		private static void ExecuteArbitrage(string userInput)
+		{
+			string[] inputSplit = userInput.Split(" ");
+
+			if (inputSplit[0] != "arbitrage" || inputSplit.Length != 8)
+			{
+				Custom.print("Format must be in form of: arbitrage symb1 symb2 platform1 platform2 priceDifferenceMin minSpend maxSpend\n" +
+				             "Eg: arbitrage agi btc bitfinex kucoin 1.5 0.1 100");
+				return;
+			}
+
+			(string symb1, string symb2) symbolPair = (inputSplit[1], inputSplit[2]);
+			
+			(IOrderFunctions platform1, IOrderFunctions platform2) platforms =
+				(SupplierIOrderFunctions.GetIOrderFunctions(inputSplit[3]), SupplierIOrderFunctions.GetIOrderFunctions(inputSplit[4]));
+
+			Decimal priceDifferenceThreshold = Convert.ToDecimal(inputSplit[5]);
+			Decimal minSpend = Convert.ToDecimal(inputSplit[6]);
+			Decimal maxSpend = Convert.ToDecimal(inputSplit[7]);
+
+			Custom.print("Attempting arbitrage..");
+			(StatusAdv status, Decimal amountExecuted, string msg) = tradingAPI.AttemptArbitrageSingle(symbolPair, platforms,
+				priceDifferenceThreshold, minSpend, maxSpend);
+
+			if (status == StatusAdv.Success)
+			{
+				Custom.print("Successfully commited arbitrage. Amount executed: " + amountExecuted);
+				Custom.print(msg);
+			}
+			else if (status == StatusAdv.Failure_InsufficientBalance)
+			{
+				Custom.print("Failed to commit arbitrage. Insufficient balance for operation");
+				Custom.print(msg);
+			}
+			else if (status == StatusAdv.Failure_InsufficientArbitrageConditions)
+			{
+				Custom.print(	"Failed to commit arbitrage. No available arbitrage opportunities within the confined conditions exist");
+				Custom.print(msg);
+			}
+			else if (status == StatusAdv.Failure_SafeLowerThanMinAmount)
+			{
+				Custom.print("Failed to commit arbitrage. The minimum spend amount is too low");
+				Custom.print(msg);
+			}
+			else
+			{
+				Custom.print("Unknown failure occurred");
+				Custom.print(msg);
+			}
 		}
 
 		private static void ClearKeysOnExit(string userInput)

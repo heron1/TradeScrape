@@ -1,8 +1,9 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Security.Cryptography;
+ using System.Reflection;
+ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ using static Helpers.Custom;
 
 namespace Scraper
 {
-	public class KucoinAPI : IOrderFunctions
+	internal class KucoinAPI : IOrderFunctions
 	{
 		private string _platform = "kucoin";
 		private string _apiKey;
@@ -357,11 +358,33 @@ namespace Scraper
 
 			return (Status.Success, outDict);
 		}
+		
+		public class DataModelCall
+		{
+			public string sequence { get; set; }
+			public List<List<string>> asks { get; set; }
+			public List<List<string>> bids { get; set; }
+			public long time { get; set; }
+		}
+
+		public class RootObjectModel
+		{
+			public int code { get; set; }
+			public DataModelCall data { get; set; }
+		}
 
 		class ResultOutputCode
 		{
 			public int code { get; set; }
 			public object data { get; set; }
+		}
+
+		class ResultOutputCodeMarket
+		{
+			public string sequence { get; set; }
+			public string time { get; set; }
+			public object bids { get; set; }
+			public object asks { get; set; }
 		}
 		
 		class ResultOutputListOrders
@@ -475,17 +498,40 @@ namespace Scraper
 			tuplesList.Sort();
 			return tuplesList.ToArray();
 		}
-
+		
 		public async Task<string[]> SymbolStats(string[] symbolPair)
 		{
 			string apiUri = $"https://api.kucoin.com/api/v1/market/stats?symbol={symbolPair[0].ToUpper()}-{symbolPair[1].ToUpper()}";
-			string strResponse = getResponseStringFromGet(apiUri).Result;
+			var preStrResponse = getResponseStringFromGet(apiUri);
 
+			var timeout = Task.Delay(2000);
+			var completeTask = await Task.WhenAny(timeout, preStrResponse);
+			if (completeTask == timeout)
+				throw new Exception("API timeout (Kucoin)");
+			else if (completeTask != preStrResponse)
+				throw new Exception("Unknown exception (Kucoin)");
+
+			string strResponse = preStrResponse.Result;
+			
 			if (_debug)
 				print(strResponse);
 
 			var output = destringifyString<ResultOutputCode>(strResponse);
+
+			if (output.code != 200000)
+			{
+				throw new Exception("KuCoin did not return Code 200000. Instead: " + strResponse);
+			}
+			
 			var outData = destringifyString<Dictionary<string, string>>(JsonConvert.SerializeObject(output.data));
+
+			if (outData.Count != 12)
+				throw new Exception("KuCoin returned unexpected data: " + strResponse);
+
+			if (outData["vol"] == "1")
+			{
+				throw new Exception("invalid volume"); //shit temp fix, redo this entire program. I used bad architecture.
+			}
 			
 			string[] responseStrArr = new string[9];
 			//Returns a string array with the symbolPair, current bid, current bid size, ask, ask size, last price, volume, high, low
@@ -499,12 +545,61 @@ namespace Scraper
 			responseStrArr[7] = outData["high"];
 			responseStrArr[8] = outData["low"];
 			
+			apiUri = $"https://api.kucoin.com/api/v1/market/orderbook/level2_20?symbol={symbolPair[0].ToUpper()}-{symbolPair[1].ToUpper()}";
+			preStrResponse = getResponseStringFromGet(apiUri);
+			
+			var timeout2 = Task.Delay(2000);
+			var completeTask2 = await Task.WhenAny(timeout2, preStrResponse);
+			if (completeTask2 == timeout2)
+				throw new Exception("API timeout (Kucoin)");
+			else if (completeTask2 != preStrResponse)
+				throw new Exception("Unknown exception (Kucoin)");
+
+			strResponse = preStrResponse.Result;
+			
+			var output2 = destringifyString<RootObjectModel>(strResponse);
+			
+			if (output2.code != 200000)
+			{
+				throw new Exception("KuCoin did not return Code 200000. Instead: " + strResponse);
+			}
+			
+			Decimal minAsk = Decimal.MaxValue;
+			Decimal minAskSize = default;
+			foreach (List<string> askStr in output2.data.asks)
+			{
+				Decimal ask = Convert.ToDecimal(askStr[0]);
+				if (ask < minAsk)
+				{
+					minAsk = ask;
+					minAskSize = Convert.ToDecimal(askStr[1]);
+				}
+			}
+			
+			Decimal maxBid = Decimal.MinValue;
+			Decimal maxBidSize = default;
+			foreach (List<string> bidStr in output2.data.bids)
+			{
+				Decimal bid = Convert.ToDecimal(bidStr[0]);
+				if (bid > maxBid)
+				{
+					maxBid = bid;
+					maxBidSize = Convert.ToDecimal(bidStr[1]);
+				}
+			}
+
+			responseStrArr[2] = maxBidSize.ToString();
+			responseStrArr[4] = minAskSize.ToString();
+			
+			responseStrArr[1] = maxBid.ToString();
+			responseStrArr[3] = minAsk.ToString();
+
 			return responseStrArr;
 		}
 
 		public string[] GetSupportedPlatforms()
 		{
-			throw new System.NotSupportedException("Use WebScraper entry point");
+			throw new System.NotSupportedException("Use ScraperWrapper entry point");
 		}
 
 		public Status SetCredentials(string platform, string apiKey, string secretKey, string passphrase)
@@ -519,7 +614,7 @@ namespace Scraper
 
 		public (string platform, string apiKey, string secretKey, string passphrase) GetCredentials()
 		{
-			throw new System.NotSupportedException("Use WebScraper entry point");
+			throw new System.NotSupportedException("Use ScraperWrapper entry point");
 		}
 
 		public async Task<bool> TestCredentials()

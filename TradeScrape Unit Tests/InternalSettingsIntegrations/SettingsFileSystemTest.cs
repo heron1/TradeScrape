@@ -3,22 +3,18 @@ using AppSettings;
 using AppSettingsFactory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace TradeScrape_Unit_Tests.InternalIntegrationTests
+namespace TradeScrape_Unit_Tests.InternalSettingsIntegrations
 {
 	[TestClass]
-	public class SettingsDatabaseTest
+	public class SettingsFileSystemTest
 	{
-		//bug: Some of the "set" unit tests may fail (only 1 will pass). This seems to be a bug with Sqlite. Refactoring with "using" everywhere in
-		//DatabaseConnector.cs, and using locks, didn't change anything. Apparently this is a common issue. If it's important, fix it, but for now
-		//don't waste anymore time on it
-		
 		private string platform = "bitfinex";
 		
 		private IAppSettings getSettings()
 		{
-			return SupplierIAppSettings.GetDatabaseIAppSettings();
+			return SupplierIAppSettings.GetFileSystemIAppSettings();
 		}
-		
+
 		[TestMethod]
 		public void GetCredentialsTest()
 		{

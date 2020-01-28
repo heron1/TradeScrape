@@ -36,7 +36,7 @@ namespace APICmdPromptApp
 
 		private static void DatabaseLink()
 		{
-			settingsConnector = SupplierIAppSettings.GetIAppSettingsStorage(); //refactor to allow choosing of storage mechanism
+			settingsConnector = SupplierIAppSettings.GetIAppSettingsStorage();
 			
 			SettingsCommunicator.settingsConnector = settingsConnector;
 			InitializeCredentials();

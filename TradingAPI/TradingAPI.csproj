@@ -5,8 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AdvancedAPI\AdvancedAPI.csproj" />
       <ProjectReference Include="..\Helpers\Helpers.csproj" />
-      <ProjectReference Include="..\Scraper\Scraper.csproj" />
     </ItemGroup>
 
 </Project>
