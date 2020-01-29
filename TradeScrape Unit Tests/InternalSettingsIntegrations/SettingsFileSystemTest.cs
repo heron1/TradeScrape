@@ -12,7 +12,7 @@ namespace TradeScrape_Unit_Tests.InternalSettingsIntegrations
 		
 		private IAppSettings getSettings()
 		{
-			return SupplierIAppSettings.GetFileSystemIAppSettings();
+			return SupplierIAppSettings.GetIAppSettingsStorage();
 		}
 
 		[TestMethod]

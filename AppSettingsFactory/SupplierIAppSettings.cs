@@ -11,12 +11,12 @@ namespace AppSettingsFactory
 	{
 		//TODO General factory retrieval here. Factory itself is responsible for reading the settings file.
 
-		public static IAppSettings GetDatabaseIAppSettings()
+		private static IAppSettings GetDatabaseIAppSettings()
 		{
 			return new DatabaseConnector();
 		}
 
-		public static IAppSettings GetFileSystemIAppSettings()
+		private static IAppSettings GetFileSystemIAppSettings()
 		{
 			return new FileSystemConnector();
 		}

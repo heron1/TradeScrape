@@ -10,35 +10,36 @@ namespace TradeScrape_Unit_Tests.ScraperWrapper_IntegrationTests
 	{
 		public abstract string GetPlatform();
 		
-		private IOrderFunctions api;
-		public IOrderFunctions GetApi()
-		{
-			return api;
-		}
+		private IOrderFunctions _api;
+		public IOrderFunctions GetApi => _api;
 
-		public ScraperWrapperTests()
+		//Little difference whether a constructor or [TestInitialize] is used for preperation, although [TestInitialize]
+		//allows other pre-condition attributes from MSTest to be used, so may as well get into the habbit.
+		[TestInitialize]
+		public void Initialize()
 		{
 			if (GetPlatform() == "mock")
 			{
-				api = new ScraperWrapper(GetPlatform());
+				_api = new ScraperWrapper(GetPlatform());
 				return;
 			}
 			
 			(bool success, string apiKey, string secretKey, string passphrase) = 
 				SupplierIAppSettings.GetIAppSettingsStorage().GetCredentials(GetPlatform());
 			
-			api = new ScraperWrapper(GetPlatform(), apiKey, secretKey, passphrase);
+			_api = new ScraperWrapper(GetPlatform(), apiKey, secretKey, passphrase);
 		}
 
 		[TestMethod]
 		public void CancelAllTest()
 		{
 			//Arrange
-			IOrderFunctions api = GetApi();
+			IOrderFunctions api = GetApi;
 
 			//Act
 			Status status = api.CancelAll().Result;
 
+			//Assert
 			Assert.AreEqual(Status.Success, status);
 
 		}
@@ -47,7 +48,7 @@ namespace TradeScrape_Unit_Tests.ScraperWrapper_IntegrationTests
 		public void GetBuyOrderHistoryAllTest()
 		{
 			//Arrange
-			IOrderFunctions api = GetApi();
+			IOrderFunctions api = GetApi;
 
 			//Act
 			var output = api.GetBuyOrderHistoryAll().Result;
@@ -60,7 +61,7 @@ namespace TradeScrape_Unit_Tests.ScraperWrapper_IntegrationTests
 		public void GetSellOrderHistoryAll()
 		{
 			//Arrange
-			IOrderFunctions api = GetApi();
+			IOrderFunctions api = GetApi;
 
 			//Act
 			var output = api.GetSellOrderHistoryAll().Result;
@@ -73,7 +74,7 @@ namespace TradeScrape_Unit_Tests.ScraperWrapper_IntegrationTests
 		public void GetOwnedStocksTest()
 		{
 			//Arrange
-			IOrderFunctions api = GetApi();
+			IOrderFunctions api = GetApi;
 
 			//Act
 			var output = api.GetOwnedStocks().Result;
@@ -86,7 +87,7 @@ namespace TradeScrape_Unit_Tests.ScraperWrapper_IntegrationTests
 		public void GetSymbols()
 		{
 			//Arrange
-			IOrderFunctions api = GetApi();
+			IOrderFunctions api = GetApi;
 
 			//Act
 			var output = api.GetSymbols().Result;
@@ -99,7 +100,7 @@ namespace TradeScrape_Unit_Tests.ScraperWrapper_IntegrationTests
 		public void TestCredentials()
 		{
 			//Arrange
-			IOrderFunctions api = GetApi();
+			IOrderFunctions api = GetApi;
 
 			//Act
 			var output = api.TestCredentials().Result;

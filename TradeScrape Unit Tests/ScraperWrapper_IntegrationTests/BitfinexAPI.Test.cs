@@ -32,7 +32,9 @@ namespace TradeScrape_Unit_Tests.ScraperWrapper_IntegrationTests
 		public void InstantiateScraperWrapper()
 		{
 			new ScraperWrapper("bitfinex", "someValidApiKey", "someValidSecretKey");
+			new ScraperWrapper("bitfinex", "someValidApiKey", "someValidSecretKey", "somePassphrase");
 		}
+		
 	}
 	
 }

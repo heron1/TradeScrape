@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Scraper;
 
-namespace TradeScrape_Unit_Tests.LiveAPIIntegrations_Level1.Mocks
+namespace Scraper
 {
 	internal class MockAPI : IOrderFunctions
 	{
-		//TODO: Implement a mockAPI which is internal. Useful for Unit Testing and general testing of new concepts
 		public async Task<Status> BuyOrder(string[] symbolPair, decimal amount, decimal price)
 		{
 			return Status.Success;

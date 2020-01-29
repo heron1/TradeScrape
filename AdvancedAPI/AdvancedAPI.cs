@@ -94,6 +94,13 @@ namespace AdvancedAPI
 			return symbolPairsMatched;
 		}
 
+		
+		//TODO: Refactor all Level 2 api methods so that the input and outputs can be a struct Type as opposed to many variables.
+		//If this works nicely, make it a future to-do to do the same thing for level 1
+		//Also see if this functionality can be encapsulated and not dependent upon other requirements. Eg: The IOrderFunctions supplier
+		//could call a method within this class that supplies an IOrderFunctions, then the implementations of this method can be changed
+		//depending upon the requirements of the unique program. This way this class can be used by itself, so long as
+		//the IOrderFunctions interface is implemented in new code somewhere else
 		public List<(string platform1, string platform2, (string symb1, string symb2) symbPair, Decimal size, Decimal priceDifference)> 
 		FindArbitrageOpportunities((string platform1, string platform2) platforms, decimal priceDifferenceThreshold, 
 			decimal minSpend, decimal maxSpend, int callLimit = 100)

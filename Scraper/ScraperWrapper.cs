@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using TradeScrape_Unit_Tests.LiveAPIIntegrations_Level1.Mocks;
 
 namespace Scraper
 {
