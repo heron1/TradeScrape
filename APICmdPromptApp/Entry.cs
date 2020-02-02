@@ -1,6 +1,5 @@
 ﻿using System;
 using AppSettings;
-using AppSettingsFactory;
 using TradingAPI;
 
 namespace APICmdPromptApp
@@ -30,13 +29,13 @@ namespace APICmdPromptApp
 
 		private static void InitializeServices()
 		{
-			DatabaseLink(); //SettingsDatabase database initialization and connection
+			DatabaseLink(); //AppSettingsDatabase database initialization and connection
 			TradingAPILink(); //initialize the default trading API
 		}
 
 		private static void DatabaseLink()
 		{
-			settingsConnector = SupplierIAppSettings.GetIAppSettingsStorage();
+			settingsConnector = SupplierIAppSettings.GetIAppSettings();
 			
 			SettingsCommunicator.settingsConnector = settingsConnector;
 			InitializeCredentials();

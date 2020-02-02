@@ -502,7 +502,7 @@ namespace Scraper
 		public async Task<string[]> SymbolStats(string[] symbolPair)
 		{
 			string apiUri = $"https://api.kucoin.com/api/v1/market/stats?symbol={symbolPair[0].ToUpper()}-{symbolPair[1].ToUpper()}";
-			var preStrResponse = getResponseStringFromGet(apiUri);
+			var preStrResponse = Task.Run(() => getResponseStringFromGet(apiUri));
 
 			var timeout = Task.Delay(2000);
 			var completeTask = await Task.WhenAny(timeout, preStrResponse);

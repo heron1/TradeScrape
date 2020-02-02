@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using static Helpers.Custom;
-using AppSettings;
 using Newtonsoft.Json;
+using static Helpers.Custom;
 
-namespace SettingsFileSystem
+namespace AppSettings._AppSettingsFileSystem
 {
 	//TODO Dynamically check for or if not exist, create, a JSON file with desired settings
 	public class FileSystemConnector : IAppSettings
@@ -16,7 +15,7 @@ namespace SettingsFileSystem
 		
 		public FileSystemConnector()
 		{
-			SwitchToAppDataFolder(Settings.GetAppDataFolderName());
+			SwitchToAppDataFolder(UserSettings.GetAppDataFolderName());
 
 			bool fileIntegrityPassed = false;
 			
@@ -62,7 +61,7 @@ namespace SettingsFileSystem
 			JsonSettingsFormat jsonSettingsFormat = new JsonSettingsFormat();
 			
 			jsonSettingsFormat.credentials = new Dictionary<string, List<string>>();
-			foreach (var platform in Settings.GetSupportedPlatforms())
+			foreach (var platform in UserSettings.GetSupportedPlatforms())
 			{
 				List<string> creds = new List<string>(3) {"", "", ""}; //apikey, secretkey, passphrase
 				jsonSettingsFormat.credentials.Add(platform, creds);

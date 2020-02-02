@@ -16,6 +16,11 @@ namespace TradingAPI
 		}
 		
 		//Level 2 API Below
+		public ExecutedArbitrageResults FindAndExecuteFirstValidSymbolPairForArbitrage()
+		{
+			return advancedAPIInstance.FindAndExecuteFirstValidSymbolPairForArbitrage();
+		}
+
 		public List<(string symb1, string symb2)> FindMatchingPlatformSymbolPairs((string platform1, string platform2) platformsTuple)
 		{
 			return advancedAPIInstance.FindMatchingPlatformSymbolPairs((platformsTuple.platform1, platformsTuple.platform2));
@@ -130,6 +135,8 @@ namespace TradingAPI
 			return advancedAPIInstance.TestCredentials();
 		}
 
-		
+		public void ArbitrageSymbolPairContinuously((string symbol1, string symbol2) symbolPair)
+		{
+		}
 	}
 }

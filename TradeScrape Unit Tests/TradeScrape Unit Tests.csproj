@@ -17,10 +17,9 @@
 
     <ItemGroup>
       <ProjectReference Include="..\AdvancedAPI\AdvancedAPI.csproj" />
-      <ProjectReference Include="..\AppSettingsFactory\AppSettingsFactory.csproj" />
-      <ProjectReference Include="..\AppSettings\AppSettings.csproj" />
+      <ProjectReference Include="..\ApiSettings\ApiSettings.csproj" />
+      <ProjectReference Include="..\AppSettingsFileSystem\AppSettingsFileSystem.csproj" />
       <ProjectReference Include="..\Scraper\Scraper.csproj" />
-      <ProjectReference Include="..\SettingsFileSystem\SettingsFileSystem.csproj" />
       <ProjectReference Include="..\TradingAPI\TradingAPI.csproj" />
     </ItemGroup>
 

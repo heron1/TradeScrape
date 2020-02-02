@@ -1,6 +1,5 @@
 ﻿using System;
 using AppSettings;
-using AppSettingsFactory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Scraper;
 

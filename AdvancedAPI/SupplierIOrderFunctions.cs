@@ -1,5 +1,4 @@
-﻿﻿using Scraper;
-using AppSettingsFactory;
+﻿﻿using AppSettings;using Scraper;
 
 namespace AdvancedAPI
 {
@@ -9,7 +8,7 @@ namespace AdvancedAPI
 		{
 			//This is the only part that needs to be changed if calling a different implementation of IOrderFunctions
 			(bool success, string apiKey, string secretKey, string passphrase) = 
-				SupplierIAppSettings.GetIAppSettingsStorage().GetCredentials(platform);
+				SupplierIAppSettings.GetIAppSettings().GetCredentials(platform);
 			
 			return new ScraperWrapper(platform, apiKey, secretKey, passphrase);
 		}

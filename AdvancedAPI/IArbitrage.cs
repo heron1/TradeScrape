@@ -6,6 +6,8 @@ namespace AdvancedAPI
 {
 	public interface IArbitrage
 	{
+		ExecutedArbitrageResults FindAndExecuteFirstValidSymbolPairForArbitrage();
+		
 		public List<(string symb1, string symb2)> FindMatchingPlatformSymbolPairs(
 			(string platform1, string platform2) platformsTuple);
 

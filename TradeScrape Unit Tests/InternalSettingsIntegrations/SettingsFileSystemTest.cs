@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using AppSettings;
-using AppSettingsFactory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TradeScrape_Unit_Tests.InternalSettingsIntegrations
@@ -12,7 +11,7 @@ namespace TradeScrape_Unit_Tests.InternalSettingsIntegrations
 		
 		private IAppSettings getSettings()
 		{
-			return SupplierIAppSettings.GetIAppSettingsStorage();
+			return SupplierIAppSettings.GetIAppSettings();
 		}
 
 		[TestMethod]

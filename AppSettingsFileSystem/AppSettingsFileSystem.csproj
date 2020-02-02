@@ -1,14 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>SettingsFileSystem</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ApiSettings\ApiSettings.csproj" />
+      <ProjectReference Include="..\AppSettings\AppSettings.csproj" />
       <ProjectReference Include="..\Helpers\Helpers.csproj" />
-      <ProjectReference Include="..\TradingAPI\TradingAPI.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     </ItemGroup>
 
 </Project>

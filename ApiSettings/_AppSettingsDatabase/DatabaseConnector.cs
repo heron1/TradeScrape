@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
-using AppSettings;
 using Helpers;
 
 //TODO Completely refactor this, the API should only be using an interface to the database, not a direct instantiation or reliance
 //upon its implementation
 //The supported platforms etc should also be pulled from a base dependent source file such as a JSON listing the supported platforms,
 //this same file should also provide the same information to the Level 1 APIs etc.
-namespace SettingsDatabase
+namespace AppSettings._AppSettingsDatabase
 {
 	public class DatabaseConnector : IAppSettings
 	{
@@ -27,7 +26,7 @@ namespace SettingsDatabase
 
 		private void CreateOrAccessDatabase()
 		{
-			Custom.SwitchToAppDataFolder(Settings.GetAppDataFolderName());
+			Custom.SwitchToAppDataFolder(UserSettings.GetAppDataFolderName());
 			m_dbConnection = new SQLiteConnection("Data Source=AppDatabase.sqlite;Version=3;Pooling=False");
 			m_dbConnection.Open();
 		}
@@ -41,7 +40,7 @@ namespace SettingsDatabase
 
 		public List<string> GetSupportedPlatforms()
 		{
-			return Settings.GetSupportedPlatforms();
+			return UserSettings.GetSupportedPlatforms();
 		}
 
 		public (bool success, string apiKey, string secretKey, string passphrase) GetCredentials(string platform)

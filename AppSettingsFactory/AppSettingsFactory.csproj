@@ -5,9 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AppSettingsDatabase\AppSettingsDatabase.csproj" />
+      <ProjectReference Include="..\AppSettingsFileSystem\AppSettingsFileSystem.csproj" />
       <ProjectReference Include="..\AppSettings\AppSettings.csproj" />
-      <ProjectReference Include="..\SettingsDatabase\SettingsDatabase.csproj" />
-      <ProjectReference Include="..\SettingsFileSystem\SettingsFileSystem.csproj" />
     </ItemGroup>
 
 </Project>

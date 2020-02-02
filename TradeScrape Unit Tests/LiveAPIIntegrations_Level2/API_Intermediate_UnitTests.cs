@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using AppSettings;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Scraper;
 
 namespace TradeScrape_Unit_Tests.LiveAPIIntegrations_Level2
@@ -10,7 +11,7 @@ namespace TradeScrape_Unit_Tests.LiveAPIIntegrations_Level2
 		
 		private IOrderFunctions getWebScraperApi(string platform)
 		{
-			var settings = AppSettingsFactory.SupplierIAppSettings.GetIAppSettingsStorage();
+			var settings = SupplierIAppSettings.GetIAppSettings();
 			var creds = settings.GetCredentials(testPlatform);
 			return new ScraperWrapper(testPlatform, creds.apiKey, creds.secretKey, creds.passphrase);
 		}

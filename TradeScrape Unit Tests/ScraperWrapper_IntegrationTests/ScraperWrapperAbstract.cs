@@ -1,5 +1,5 @@
 ﻿using System;
-using AppSettingsFactory;
+using AppSettings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Scraper;
 
@@ -25,7 +25,7 @@ namespace TradeScrape_Unit_Tests.ScraperWrapper_IntegrationTests
 			}
 			
 			(bool success, string apiKey, string secretKey, string passphrase) = 
-				SupplierIAppSettings.GetIAppSettingsStorage().GetCredentials(GetPlatform());
+				SupplierIAppSettings.GetIAppSettings().GetCredentials(GetPlatform());
 			
 			_api = new ScraperWrapper(GetPlatform(), apiKey, secretKey, passphrase);
 		}
@@ -91,6 +91,19 @@ namespace TradeScrape_Unit_Tests.ScraperWrapper_IntegrationTests
 
 			//Act
 			var output = api.GetSymbols().Result;
+
+			//Assert
+			Assert.IsTrue(output.Length > 0);
+		}
+
+		[TestMethod]
+		public void SymbolStatsTest()
+		{
+			//Arrange
+			IOrderFunctions api = GetApi;
+
+			//Act
+			var output = api.SymbolStats(new string[] {"ETH", "BTC"}).Result;
 
 			//Assert
 			Assert.IsTrue(output.Length > 0);

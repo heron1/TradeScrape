@@ -5,8 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AppSettingsFactory\AppSettingsFactory.csproj" />
-      <ProjectReference Include="..\AppSettings\AppSettings.csproj" />
+      <ProjectReference Include="..\ApiSettings\ApiSettings.csproj" />
       <ProjectReference Include="..\Helpers\Helpers.csproj" />
       <ProjectReference Include="..\Scraper\Scraper.csproj" />
     </ItemGroup>

@@ -45,7 +45,7 @@ namespace APICmdPromptApp
 			var secretKey = "";
 			var passphrase = "";
 
-			var supportedPlatforms = Settings.GetSupportedPlatforms();
+			var supportedPlatforms = UserSettings.GetSupportedPlatforms();
 			var prompter =
 				"Default trading platform details have not been set. You will now be guided to enter your desired platform," +
 				" your API key, and your secret key. All three must be entered exactly correct, with case sensitivity.\nHere is a list of available" +

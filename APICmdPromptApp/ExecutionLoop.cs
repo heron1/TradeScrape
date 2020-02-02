@@ -235,7 +235,7 @@ namespace APICmdPromptApp
 		private static void GetPlatforms()
 		{
 			Custom.print("Available platforms are -");
-			foreach (var platform in Settings.GetSupportedPlatforms())
+			foreach (var platform in UserSettings.GetSupportedPlatforms())
 				Custom.print(platform);
 		}
 
@@ -248,7 +248,7 @@ namespace APICmdPromptApp
 		private static void SetPlatform(string userInput)
 		{
 			var platform = userInput.Split(" ")[1];
-			if (!Settings.GetSupportedPlatforms().Contains(platform))
+			if (!UserSettings.GetSupportedPlatforms().Contains(platform))
 			{
 				Custom.print("Specified platform is not known");
 				return;

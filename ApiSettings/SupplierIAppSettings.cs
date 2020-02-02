@@ -1,11 +1,7 @@
-﻿using System.IO;
-using Helpers;
-using AppSettings;
-using Newtonsoft.Json;
-using SettingsDatabase;
-using SettingsFileSystem;
+﻿using AppSettings._AppSettingsDatabase;
+using AppSettings._AppSettingsFileSystem;
 
-namespace AppSettingsFactory
+namespace AppSettings
 {
 	public static class SupplierIAppSettings
 	{
@@ -21,16 +17,16 @@ namespace AppSettingsFactory
 			return new FileSystemConnector();
 		}
 
-		public static IAppSettings GetIAppSettingsStorage()
+		public static IAppSettings GetIAppSettings()
 		{
-			string storageBackend = Settings.RetrieveBackendSettingsStorage();
+			string storageBackend = UserSettings.RetrieveBackendSettingsStorage();
 			if (storageBackend == "database")
 				return GetDatabaseIAppSettings();
 			else if (storageBackend == "filesystem")
 				return GetFileSystemIAppSettings();
 			else
 			{
-				Settings.ReCreateUserSettings();
+				UserSettings.ReCreateUserSettings();
 				return GetDatabaseIAppSettings();
 			}
 		}

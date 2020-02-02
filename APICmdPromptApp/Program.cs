@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using static Helpers.Custom;
 
 namespace APICmdPromptApp
@@ -19,7 +19,7 @@ namespace APICmdPromptApp
 			catch (AggregateException e)
 			{
 				if (e.Message.Contains("No such host is known"))
-					print("ERROR (SocketException). Please check your Internet connection.");
+					print("ERROR (SocketException). Please check your Internet connection."); //lol
 				else
 					throw;
 			}

@@ -116,6 +116,7 @@ namespace Scraper
 		public Task<string[]> SymbolStats(string[] symbolPair)
 		{
 			 var output = _innerType.SymbolStats(symbolPair).Result;
+			 //consider throwing the excpetion at this level if output isn't in desired format
 			 output[1] = JsonConvert.DeserializeObject<Decimal>(output[1]).ToString();
 			 output[2] = JsonConvert.DeserializeObject<Decimal>(output[2]).ToString();
 			 output[3] = JsonConvert.DeserializeObject<Decimal>(output[3]).ToString();
